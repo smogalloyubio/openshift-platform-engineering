@@ -1,4 +1,3 @@
-# Openshift-02-Project
 
 # 🚀 Automated OpenShift Deployment Platform Using GitHub Actions and Kustomize
 
@@ -180,3 +179,315 @@ The application is packaged using Docker to provide:
 | OpenShift CLI (`oc`) | Cluster operations                  |
 
 ---
+
+
+# 🛠️ Technology Stack
+
+This project uses modern cloud-native and DevOps technologies to automate application delivery from source code to a running workload on OpenShift.
+
+| Category                 | Technology           | Purpose                                   |
+| ------------------------ | -------------------- | ----------------------------------------- |
+| Containerization         | Docker               | Build and package application containers  |
+| CI/CD                    | GitHub Actions       | Automate build and deployment workflow    |
+| Container Platform       | Red Hat OpenShift    | Run and manage containerized applications |
+| Orchestration            | Kubernetes           | Application workload management           |
+| Configuration Management | Kustomize            | Manage Kubernetes/OpenShift manifests     |
+| CLI Tools                | OpenShift CLI (`oc`) | Authenticate and interact with OpenShift  |
+| Version Control          | Git & GitHub         | Source code management                    |
+| Configuration            | YAML                 | Define Kubernetes resources               |
+
+---
+
+# 📂 Project Structure
+
+The repository follows a DevOps-friendly structure separating application code, container configuration, Kubernetes manifests, and CI/CD automation.
+
+```text
+OpenShift-platform-project-02
+│
+├── .github/
+│   └── workflows/
+│       └── deployment.yaml
+│
+├── k8s/
+│   │
+│   ├── base/
+│   │   ├── deployment.yaml
+│   │   ├── service.yaml
+│   │   ├── route.yaml
+│   │   └── kustomization.yaml
+│   │
+│   └── overlays/
+│       │
+│       ├── dev/
+│       │   ├── kustomization.yaml
+│       │   └── patches/
+│       │
+│       └── prod/
+│           ├── kustomization.yaml
+│           └── patches/
+│
+├── Dockerfile
+│
+├── application/
+│
+├── requirements.txt
+│
+└── README.md
+```
+
+---
+
+# 📁 Repository Components
+
+| Directory/File       | Description                                               |
+| -------------------- | --------------------------------------------------------- |
+| `.github/workflows/` | Contains GitHub Actions CI/CD pipeline definitions        |
+| `Dockerfile`         | Instructions for building the application container image |
+| `k8s/base/`          | Base Kubernetes/OpenShift resources                       |
+| `k8s/overlays/`      | Environment-specific configurations                       |
+| `kustomization.yaml` | Defines Kustomize resources and transformations           |
+| Application source   | Contains application code                                 |
+| `requirements.txt`   | Application dependencies                                  |
+
+---
+
+# 📋 Prerequisites
+
+Before deploying this project, ensure the following tools are available.
+
+## Required Tools
+
+| Tool                 | Purpose                               |
+| -------------------- | ------------------------------------- |
+| Git                  | Clone and manage repository           |
+| Docker               | Build container images                |
+| GitHub Account       | Store code and execute pipelines      |
+| OpenShift Cluster    | Application deployment platform       |
+| OpenShift CLI (`oc`) | Cluster authentication and management |
+| Kustomize            | Kubernetes configuration management   |
+
+---
+
+# 🚀 Installation
+
+## Step 1 — Clone the Repository
+
+Clone the project:
+
+```bash
+git clone https://github.com/smogalloyubio/Openshift-platform-project-02.git
+```
+
+Navigate into the project directory:
+
+```bash
+cd Openshift-platform-project-02
+```
+
+---
+
+# 🐳 Step 2 — Build Docker Image Locally (Optional)
+
+Before using the automated pipeline, the Docker image can be tested locally.
+
+Build the image:
+
+```bash
+docker build -t openshift-platform-app .
+```
+
+Verify the image:
+
+```bash
+docker images
+```
+
+Run the container:
+
+```bash
+docker run -p 8080:8080 openshift-platform-app
+```
+
+Test the application:
+
+```text
+http://localhost:8080
+```
+
+---
+
+# ⚙️ Configuration
+
+The deployment process requires access to:
+
+* Container registry credentials.
+* OpenShift cluster credentials.
+* Deployment configuration.
+
+Configuration values are managed securely through GitHub Actions Secrets.
+
+---
+
+# 🔐 GitHub Actions Secrets
+
+The pipeline uses GitHub encrypted secrets to securely authenticate with external services.
+Required secrets:
+
+| Secret              | Purpose                        |
+| ------------------- | ------------------------------ |
+| `OPENSHIFT_SERVER`  | OpenShift API endpoint         |
+| `OPENSHIFT_TOKEN`   | OpenShift authentication token |
+| `REGISTRY_USERNAME` | Container registry username    |
+| `REGISTRY_PASSWORD` | Container registry password    |
+
+---
+
+# 🔑 OpenShift Authentication
+
+The GitHub Actions workflow securely authenticates into OpenShift using the provided token.
+
+Example:
+
+```bash
+oc login \
+--server=$OPENSHIFT_SERVER \
+--token=$OPENSHIFT_TOKEN
+```
+
+After authentication, the pipeline can execute OpenShift deployment commands.
+
+---
+
+# 🎯 Namespace Configuration
+
+The deployment targets a specific OpenShift namespace/project.
+
+Example:
+
+```bash
+oc project my-project
+```
+
+Verify the active project:
+
+```bash
+oc project
+```
+
+---
+
+# 🧩 Kustomize Configuration
+
+Kustomize is used to maintain Kubernetes/OpenShift resources in a clean and reusable way.
+
+Instead of managing multiple copies of YAML files, Kustomize allows the project to maintain:
+
+* Common base resources.
+* Environment-specific overlays.
+* Configuration patches.
+* Image updates.
+
+Example structure:
+
+```text
+k8s/
+
+├── base/
+│
+│   deployment.yaml
+│   service.yaml
+│   route.yaml
+│
+└── overlays/
+
+    ├── dev/
+
+    └── prod/
+```
+
+---
+
+# Why Kustomize?
+
+Using Kustomize provides several advantages:
+
+| Traditional YAML Management      | Kustomize Approach          |
+| -------------------------------- | --------------------------- |
+| Duplicate manifests              | Reusable base configuration |
+| Manual image updates             | Automated image replacement |
+| Difficult environment management | Overlay-based configuration |
+| Configuration drift              | Consistent deployments      |
+
+---
+
+# ▶️ Running Kustomize Locally
+
+Validate the generated Kubernetes/OpenShift manifests:
+
+```bash
+kustomize build k8s/overlays/dev
+```
+
+Preview the deployment:
+
+```bash
+kustomize build k8s/overlays/dev | less
+```
+
+Apply manually:
+
+```bash
+kustomize build k8s/overlays/dev | oc apply -f -
+```
+
+---
+
+# ✅ Deployment Validation
+
+After deployment, verify the resources:
+
+Check Pods:
+
+```bash
+oc get pods
+```
+
+Check Services:
+
+```bash
+oc get svc
+```
+
+Check Routes:
+
+```bash
+oc get routes
+```
+
+Check Deployment status:
+
+```bash
+oc get deployment
+```
+
+---
+
+# Application Health Verification
+
+Confirm that:
+
+* Pods are running.
+* Services are created.
+* Routes are accessible.
+* Containers start successfully.
+* Application logs show no errors.
+
+View logs:
+
+```bash
+oc logs deployment/<deployment-name>
+```
+
+---
+
