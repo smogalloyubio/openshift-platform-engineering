@@ -163,63 +163,8 @@ The application is packaged using Docker to provide:
 * Cloud-native deployment compatibility.
 
 ---
-
 # 🏗️ High-Level Architecture
-
-```text
-                    Developer
-
-                        |
-                        |
-                        ▼
-
-                GitHub Repository
-
-                        |
-                        |
-                        ▼
-
-              GitHub Actions Pipeline
-
-        ┌──────────────────────────────┐
-        │                              │
-        │  Checkout Source Code        │
-        │                              │
-        │  Build Docker Image          │
-        │                              │
-        │  Push Image Registry         │
-        │                              │
-        │  Install Kustomize           │
-        │                              │
-        │  Login To OpenShift          │
-        │                              │
-        │  Deploy Application          │
-        │                              │
-        └──────────────────────────────┘
-
-                        |
-                        |
-                        ▼
-
-              OpenShift Cluster
-
-        ┌──────────────────────────────┐
-        │                              │
-        │ Deployment                   │
-        │ Service                      │
-        │ Route                        │
-        │ Pods                         │
-        │ Configurations               │
-        │                              │
-        └──────────────────────────────┘
-
-                        |
-                        |
-                        ▼
-
-              Application Running
-```
-
+![Achitectural Diagram](https://github.com/smogalloyubio/Openshift-platform-project-02/blob/main/Achitecturaldiagram/Openshiftcluster.jpg)
 ---
 
 # 🧩 System Components
