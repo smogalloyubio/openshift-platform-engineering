@@ -18,6 +18,14 @@ spec:
     - group: '*'
       kind: '*'
 
+  syncWindows:
+    - kind: deny
+      schedule: '0 22 * * *'
+      duration: 8h
+      namespaces:
+        - stage
+      manualSync: true
+
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
@@ -32,6 +40,15 @@ spec:
     - namespace: stage
       server: https://kubernetes.default.svc
   clusterResourceWhitelist: []
+
+  syncWindows:
+    - kind: deny
+      schedule: '* * * * *'
+      duration: 24h
+      namespaces:
+        - stage
+      manualSync: false
+
   namespaceResourceWhitelist:
     - group: ''
       kind: ConfigMap
@@ -62,6 +79,20 @@ spec:
     - namespace: prod
       server: https://kubernetes.default.svc
   clusterResourceWhitelist: []
+
+  - kind: deny
+    schedule: '* * * * *'
+    duration: 24h
+    namespaces:
+      - prod
+    manualSync: false
+
+  - kind: allow
+    schedule: '0 23 * * *'
+    duration: 1h
+    namespaces:
+      - prod
+
   namespaceResourceWhitelist:
     - group: ''
       kind: ConfigMap
