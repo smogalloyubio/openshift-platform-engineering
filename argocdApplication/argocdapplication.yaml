@@ -1,0 +1,65 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: app-dev
+  namespace: argocd
+spec:
+  project: dev-project
+  source:
+    repoURL: https://github.com/smogalloyubio/Openshift-platform-Kustomized.git
+    targetRevision: main
+    path: kustomized/overlay/dev
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dev
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: app-stage
+  namespace: argocd
+spec:
+  project: stage-project
+  source:
+    repoURL: https://github.com/smogalloyubio/Openshift-platform-Kustomized.git
+    targetRevision: main
+    path: kustomized/overlay/stage
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: stage
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: app-prod
+  namespace: argocd
+spec:
+  project: prod-project
+  source:
+    repoURL: https://github.com/smogalloyubio/Openshift-platform-Kustomized.git
+    targetRevision: main
+    path: kustomized/overlay/prod
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: prod
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: false
+    syncOptions:
+      - CreateNamespace=true
