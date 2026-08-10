@@ -1,0 +1,80 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: dev-project
+  namespace: argocd
+spec:
+  description: Development Environment
+  sourceRepos:
+    - 'https://github.com/smogalloyubio/Openshift-platform-Kustomized.git'
+  destinations:
+    - namespace: dev
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: stage-project
+  namespace: argocd
+spec:
+  description: Staging Environment
+  sourceRepos:
+    - 'https://github.com/smogalloyubio/Openshift-platform-Kustomized.git'
+  destinations:
+    - namespace: stage
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist: []
+  namespaceResourceWhitelist:
+    - group: ''
+      kind: ConfigMap
+    - group: ''
+      kind: Secret
+    - group: ''
+      kind: Service
+    - group: ''
+      kind: ServiceAccount
+    - group: apps
+      kind: Deployment
+    - group: apps
+      kind: StatefulSet
+    - group: batch
+      kind: Job
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: prod-project
+  namespace: argocd
+spec:
+  description: Production Environment
+  sourceRepos:
+    - 'https://github.com/smogalloyubio/Openshift-platform-Kustomized.git'
+  destinations:
+    - namespace: prod
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist: []
+  namespaceResourceWhitelist:
+    - group: ''
+      kind: ConfigMap
+    - group: ''
+      kind: Secret
+    - group: ''
+      kind: Service
+    - group: apps
+      kind: Deployment
+    - group: networking.k8s.io
+      kind: Ingress
+  namespaceResourceBlacklist:
+    - group: rbac.authorization.k8s.io
+      kind: Role
+    - group: rbac.authorization.k8s.io
+      kind: RoleBinding
