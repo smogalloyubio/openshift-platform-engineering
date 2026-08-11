@@ -7,7 +7,7 @@ spec:
   project: default
   source:
     repoURL: 'https://github.com/smogalloyubio/Openshift-platform-Kustomized.git'
-    targetRevision: HEAD
+    targetRevision: main 
     path: mysql-deploy/
   destination:
     server: 'https://kubernetes.default.svc'
