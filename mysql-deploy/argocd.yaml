@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/your-username/Openshift-platform-Kustomized.git'
+    repoURL: 'https://github.com/smogalloyubio/Openshift-platform-Kustomized.git'
     targetRevision: HEAD
     path: mysql-deploy/
   destination:
