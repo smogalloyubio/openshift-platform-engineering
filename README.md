@@ -25,7 +25,7 @@ This project focuses on platform engineering practices such as repeatable deploy
 
 The architecture diagram below illustrates the platform and application delivery design.
 
-![OpenShift Platform Engineering Architecture](Achitecturaldiagram/Openshiftcluster.jpg)
+![OpenShift Platform Engineering Architecture](https://github.com/smogalloyubio/openshift-platform-engineering/blob/main/Achitecturaldiagram/openshiftdaigram.jpg)
 
 ### Application delivery flow
 
