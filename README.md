@@ -515,6 +515,3 @@ This project brings together several important platform engineering concepts:
 - Defining GitOps applications with Argo CD.
 - Managing encrypted Kubernetes secrets using Sealed Secrets.
 
-**Repository:** https://github.com/smogalloyubio/openshift-platform-engineering
-
-**Architecture diagram:** `Achitecturaldiagram/Openshiftcluster.jpg`
