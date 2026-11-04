@@ -1,73 +1,61 @@
+# OpenShift Platform Engineering: CI/CD, GitOps and Application Deployment
 
-# OpenShift Platform Engineering: Automated CI/CD and GitOps Deployment
-
-![Docker](https://img.shields.io/badge/Docker-Containerization-2496ED?logo=docker&logoColor=white)
-![OpenShift](https://img.shields.io/badge/OpenShift-Container_Platform-EE0000?logo=redhatopenshift&logoColor=white)
+![OpenShift](https://img.shields.io/badge/Red_Hat-OpenShift-EE0000?logo=redhatopenshift&logoColor=white)
 ![Kubernetes](https://img.shields.io/badge/Kubernetes-Orchestration-326CE5?logo=kubernetes&logoColor=white)
-![Kustomize](https://img.shields.io/badge/Kustomize-Configuration_Management-326CE5?logo=kubernetes&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Containerization-2496ED?logo=docker&logoColor=white)
 ![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-CI%2FCD-2088FF?logo=githubactions&logoColor=white)
 ![Argo CD](https://img.shields.io/badge/Argo_CD-GitOps-EF7B4D?logo=argo&logoColor=white)
+![Kustomize](https://img.shields.io/badge/Kustomize-Configuration_Management-326CE5?logo=kubernetes&logoColor=white)
 ![Quay](https://img.shields.io/badge/Quay-Container_Registry-2A7AE2?logo=redhat&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
 
-## Overview
+## Project Overview
 
-This project demonstrates an automated cloud-native application delivery workflow using GitHub Actions, Docker, Quay.io, Kustomize, Argo CD and Red Hat OpenShift.
+This project demonstrates a cloud-native application delivery workflow built around **Red Hat OpenShift, Kubernetes, GitHub Actions, Docker, Quay.io, Kustomize and Argo CD**.
 
-The application is a Python Flask-based cryptocurrency dashboard that exposes REST API endpoints for cryptocurrency information, historical price data, market statistics and application health.
+The goal is to explore how application code can be tested, packaged into a container image, scanned for vulnerabilities, stored in a container registry and deployed to an OpenShift environment.
 
-The project demonstrates how application source code can move through a CI/CD pipeline, be packaged into a container image, scanned for vulnerabilities, published to a container registry and deployed to an OpenShift environment.
+The application is a Python Flask-based cryptocurrency dashboard. It exposes REST API endpoints for cryptocurrency information, historical price data, market statistics and application health.
 
-It also explores GitOps practices through Argo CD and environment-specific Kubernetes configuration using Kustomize.
+The repository also includes Kubernetes deployment manifests, environment-specific Kustomize overlays, Argo CD application definitions and a separate MySQL deployment with Sealed Secrets configuration.
 
-## Project Goals
-
-- Automate application testing and container image creation.
-- Implement CI/CD using GitHub Actions.
-- Scan application dependencies and container images with Trivy.
-- Publish container images to Quay.io.
-- Deploy containerized workloads to OpenShift.
-- Manage reusable Kubernetes manifests using Kustomize.
-- Explore GitOps deployment using Argo CD.
-- Separate development, staging and production configurations.
-- Demonstrate secure handling of deployment credentials.
+This project focuses on platform engineering practices such as repeatable deployments, declarative configuration, CI/CD automation, environment separation and container security.
 
 ## Architecture
 
-![OpenShift Architecture](Achitecturaldiagram/Openshiftcluster.jpg)
+The architecture diagram below illustrates the platform and application delivery design.
 
-### Application delivery workflow
+![OpenShift Platform Engineering Architecture](Achitecturaldiagram/Openshiftcluster.jpg)
+
+### Application delivery flow
 
 1. A developer pushes application changes to GitHub.
 2. GitHub Actions checks out the source code.
-3. Python 3.12 is configured and application dependencies are installed.
-4. Pytest executes the application tests.
-5. Trivy scans the repository filesystem for vulnerabilities.
-6. Docker Buildx builds the application image.
-7. Trivy scans the built image.
-8. The image is published to Quay.io.
-9. The deployment workflow authenticates to OpenShift using GitHub Actions secrets.
-10. Kustomize is used to prepare the Kubernetes manifests.
-11. OpenShift receives the application resources.
-12. The deployment rollout is checked.
-
-Argo CD configuration is also included to demonstrate declarative GitOps management of development, staging and production applications.
+3. Python dependencies are installed and automated tests are executed.
+4. Trivy is used to scan the repository for vulnerabilities.
+5. Docker Buildx builds the application container image.
+6. Trivy scans the container image.
+7. The image is published to Quay.io.
+8. The deployment workflow is intended to authenticate to the OpenShift API and deploy the application.
+9. Kustomize provides reusable base manifests and environment-specific overlays.
+10. Argo CD application definitions provide a GitOps deployment approach for development, staging and production.
 
 ## Technology Stack
 
-| Technology | Purpose |
+| Technology | Role in the project |
 |---|---|
 | Python 3.12 | Application runtime |
 | Flask | Web application and REST API |
 | Pytest | Application testing |
-| Docker | Container image creation |
+| Docker | Containerization |
 | GitHub Actions | CI/CD automation |
-| Trivy | Vulnerability scanning |
+| Trivy | Filesystem and container vulnerability scanning |
 | Quay.io | Container image registry |
 | Kubernetes | Container orchestration |
-| Red Hat OpenShift | Application platform |
-| Kustomize | Manifest customization |
-| Argo CD | GitOps continuous delivery |
-| YAML | Infrastructure and application configuration |
+| Red Hat OpenShift | Enterprise Kubernetes application platform |
+| Kustomize | Reusable manifests and environment overlays |
+| Argo CD | GitOps application delivery |
+| Bitnami Sealed Secrets | Encrypted Kubernetes secret configuration |
 
 ## Repository Structure
 
@@ -95,11 +83,8 @@ openshift-platform-engineering/
 │   │
 │   └── overlay/
 │       ├── dev/
-│       │   └── kustomization.yaml
 │       ├── stage/
-│       │   └── kustomization.yaml
 │       └── prod/
-│           └── kustomization.yaml
 │
 ├── mysql-deploy/
 │   ├── argocd.yaml
@@ -107,9 +92,7 @@ openshift-platform-engineering/
 │
 ├── static/
 │   ├── css/
-│   │   └── main.css
 │   └── js/
-│       └── main.js
 │
 ├── templates/
 │   └── index.html
@@ -124,29 +107,27 @@ openshift-platform-engineering/
 └── README.md
 ```
 
-## Application Components
+## 1. Application Development
 
-### 1. Flask Application
+The application is developed using Python and Flask.
 
-The application is implemented in `app.py` using Flask.
+The main application logic is in `app.py`.
 
-It provides the following endpoints:
+### Available endpoints
 
-| Endpoint | Description |
+| Endpoint | Purpose |
 |---|---|
-| `/` | Renders the cryptocurrency dashboard. |
-| `/api/crypto` | Returns simulated cryptocurrency market data. |
-| `/api/crypto/<coin_id>/history` | Returns generated historical price data. |
-| `/api/stats` | Returns market statistics. |
-| `/health` | Returns application health information. |
+| `/` | Displays the cryptocurrency dashboard |
+| `/api/crypto` | Returns cryptocurrency information |
+| `/api/crypto/<coin_id>/history` | Returns historical price data |
+| `/api/stats` | Returns market statistics |
+| `/health` | Application health endpoint |
 
-**Important:** The cryptocurrency information is simulated using Python's random number generation. It is not a live financial market data integration.
+## 2. Docker Containerization
 
-### 2. Docker Containerization
+The Dockerfile packages the Flask application and its Python dependencies into a container image.
 
-The Dockerfile packages the Flask application into a Python 3.12 container.
-
-Build the image locally:
+Build the image:
 
 ```bash
 docker build -t mypython-app:latest .
@@ -161,13 +142,13 @@ docker run -d \
   mypython-app:latest
 ```
 
-Test the application:
+Test the health endpoint:
 
 ```bash
 curl http://localhost:5000/health
 ```
 
-Expected response:
+Expected response structure:
 
 ```json
 {
@@ -176,154 +157,204 @@ Expected response:
 }
 ```
 
-### 3. GitHub Actions CI/CD
+The container exposes port `5000`, which is also the application port configured in the Kubernetes Service and Deployment.
 
-The workflow is defined in:
+## 3. CI/CD with GitHub Actions
+
+The GitHub Actions workflow is located at:
 
 ```text
 .github/workflows/docker-image.yml
 ```
 
-It is configured for pushes to `main` and `develop`, and pull requests targeting `main`.
+The workflow is configured to respond to:
 
-The workflow contains four jobs.
+- Pushes to `main`.
+- Pushes to `develop`.
+- Pull requests targeting `main`.
 
-**Test**
+The workflow defines four jobs.
 
-- Checks out the source code.
-- Configures Python 3.12.
-- Installs dependencies from `requirements.txt`.
-- Executes the Pytest suite.
+### Job 1: Application testing
+
+The test job:
+
+- Checks out the repository.
+- Sets up Python 3.12.
+- Installs the dependencies.
+- Runs the Pytest test suite.
 
 ```bash
+pip install -r requirements.txt
+
 pytest tests/ -v --tb=short
 ```
 
-**Scan Docker**
+### Job 2: Filesystem security scanning
 
-- Runs after successful tests.
-- Uses Trivy filesystem scanning.
-- Checks for HIGH and CRITICAL vulnerabilities.
+Trivy is configured to scan the repository filesystem for HIGH and CRITICAL vulnerabilities.
 
-**Build**
+This helps identify vulnerable dependencies and other issues that should be reviewed before the application is packaged.
 
-- Builds the Docker image using Docker Buildx.
-- Uses Quay.io as the image registry.
-- Scans the built image with Trivy.
-- Publishes the image to Quay.io.
+### Job 3: Container image build and scanning
 
-The configured image repository is:
+Docker Buildx is used to build the application image.
+
+The configured registry and image repository are:
 
 ```text
 quay.io/ubiowororuki/mypython-app
 ```
 
-**Deploy**
+Trivy is also configured to scan the built image for container vulnerabilities.
 
-- Installs the OpenShift CLI.
-- Authenticates to the OpenShift API.
-- Updates the image reference.
-- Applies Kubernetes resources.
-- Checks the deployment rollout.
+The workflow then publishes the image to Quay.io.
 
-The deployment commands require a working Kustomize installation and a valid Kustomize build target.
+### Job 4: OpenShift deployment
 
-### 4. Kustomize Configuration
+The deployment job is intended to:
 
-The project separates common resources from environment-specific configuration.
+- Install the OpenShift CLI (`oc`).
+- Authenticate to the OpenShift API.
+- Update the container image reference.
+- Apply Kubernetes resources.
+- Check the application deployment rollout.
 
-**Base configuration**
+The workflow uses GitHub Actions secrets to provide registry and OpenShift credentials.
+
+The current deployment commands and Kustomize installation need correction before this job can reliably deploy the environment overlays.
+
+## 4. Kubernetes Deployment with Kustomize
+
+Kustomize is used to separate reusable Kubernetes resources from environment-specific configuration.
+
+This makes it easier to maintain a common application configuration while changing settings for different environments.
+
+### Base manifests
+
+The common Kubernetes resources are stored in:
 
 ```text
 kustomized/base/
 ```
 
-Contains:
+The directory contains:
 
 - `deployment.yaml`
 - `service.yaml`
 - `kustomization.yaml`
 
-The Deployment defines four replicas by default and uses the Quay.io application image. The Service exposes port 5000.
+The Deployment defines the application container, image and port. The Service exposes the application internally on port `5000`.
 
-**Environment overlays**
+### Environment-specific overlays
+
+The project includes three overlays:
 
 ```text
 kustomized/overlay/
 ├── dev/
+│   └── kustomization.yaml
 ├── stage/
+│   └── kustomization.yaml
 └── prod/
+    └── kustomization.yaml
 ```
 
-The overlays customize namespace, resource names and replica counts.
+Each overlay references the common base and applies environment-specific settings.
 
-| Environment | Namespace | Replicas |
+| Environment | Namespace | Replica count |
 |---|---|---:|
-| Development | dev | 2 |
-| Staging | stage | 4 |
-| Production | prod | 4 |
+| Development | `dev` | 2 |
+| Staging | `stage` | 4 |
+| Production | `prod` | 4 |
 
-These are the values declared in the overlay manifests.
+The overlays also apply environment-specific resource name prefixes.
 
-Build an individual overlay:
+### Build the manifests
+
+Development:
 
 ```bash
 kustomize build kustomized/overlay/dev
 ```
+
+Staging:
 
 ```bash
 kustomize build kustomized/overlay/stage
 ```
 
+Production:
+
 ```bash
 kustomize build kustomized/overlay/prod
 ```
 
-Review the rendered manifests before applying them:
+### Apply to OpenShift
 
-```bash
-kustomize build kustomized/overlay/dev
-```
-
-Apply an environment after confirming the configuration:
+After connecting to the appropriate cluster and reviewing the generated manifests, deploy the development configuration:
 
 ```bash
 kustomize build kustomized/overlay/dev | oc apply -f -
 ```
 
-### 5. Argo CD GitOps Configuration
+Check the deployed resources:
 
-The repository includes Argo CD Project definitions in:
-
-```text
-argocd/argocd-project.yaml
+```bash
+oc get pods -n dev
+oc get deployments -n dev
+oc get services -n dev
 ```
 
-It also contains Application definitions in:
+Check the rollout:
 
-```text
-argocdApplication/argocdapplication.yaml
+```bash
+oc rollout status deployment/dev-mypython-app -n dev
 ```
 
-The configuration defines three applications:
+The deployment name and namespace above reflect the development overlay's configured prefix and namespace.
 
-- `app-dev`
-- `app-stage`
-- `app-prod`
+## 5. GitOps with Argo CD
 
-Each application references an environment-specific Kustomize overlay.
+Argo CD configuration is included to demonstrate declarative application management.
 
-The development and staging applications declare automated synchronization with pruning and self-healing enabled.
+The repository contains:
 
-Production declares automated synchronization with pruning and self-healing disabled.
+```text
+argocd/
+└── argocd-project.yaml
 
-The Argo CD configuration also defines project-level source repository restrictions, destination namespaces and resource permissions.
+argocdApplication/
+└── argocdapplication.yaml
+```
 
-Before deploying these definitions, verify that their configured Git repository URL matches this repository and that the Argo CD Projects and namespaces exist or can be created.
+### Argo CD Projects
 
-### 6. MySQL Deployment and Secret Management
+The project definitions describe separate development, staging and production environments.
 
-The repository contains a separate MySQL deployment:
+They configure source repository restrictions, deployment destinations and resource permissions.
+
+### Argo CD Applications
+
+The Application definitions include:
+
+| Application | Environment | Kustomize path |
+|---|---|---|
+| `app-dev` | Development | `kustomized/overlay/dev` |
+| `app-stage` | Staging | `kustomized/overlay/stage` |
+| `app-prod` | Production | `kustomized/overlay/prod` |
+
+The development and staging definitions specify automated synchronization with pruning and self-healing.
+
+Production has automated synchronization configured with pruning and self-healing disabled.
+
+This provides a useful starting point for separating application delivery policies by environment.
+
+## 6. MySQL Deployment and Secret Management
+
+The project also includes a separate MySQL workload.
+
+Its manifests are stored in:
 
 ```text
 mysql-deploy/
@@ -331,58 +362,55 @@ mysql-deploy/
 └── mysqldeployment.yaml
 ```
 
-The MySQL workload uses MySQL 8.0 and exposes port 3306 through a Kubernetes Service.
+The MySQL Deployment uses the MySQL 8.0 container image and exposes port `3306`.
 
-Its environment variables reference Kubernetes Secret keys:
+The database configuration references Kubernetes Secret keys for:
 
-- `mysql-root-password`
-- `mysql-db`
-- `mysql-user`
-- `mysql-password`
+- MySQL root password.
+- Database name.
+- Database username.
+- Database password.
 
-The repository also contains:
+The repository also includes:
 
 ```text
 mysql-sealed-secret.yaml
 ```
 
-This is intended to support encrypted secret management using Bitnami Sealed Secrets.
+This resource uses the Bitnami Sealed Secrets format to represent encrypted database configuration.
 
-The SealedSecret controller must be installed and configured in the target cluster. The encrypted resource must be compatible with the controller's sealing key.
+The Sealed Secrets controller must be installed in the target cluster, and the encrypted resource must be compatible with the controller's sealing key.
 
-For production use, MySQL should also have persistent storage, resource requests and limits, appropriate access controls and backup procedures. These should be verified or added before treating the database deployment as production-ready.
+For a production database deployment, persistent storage, backups, resource limits and appropriate access controls should also be configured.
 
-## Prerequisites
+## 7. Prerequisites
 
-Before deploying the project, prepare:
+To work with the project, prepare:
 
-- Git and GitHub account.
-- Docker.
+- Git and a GitHub account.
 - Python 3.12.
+- Docker.
 - OpenShift cluster access.
 - OpenShift CLI (`oc`).
 - Kustomize.
 - Quay.io account and registry permissions.
-- GitHub Actions enabled.
-- Argo CD installed if using the GitOps configuration.
-- Sealed Secrets controller installed if using the SealedSecret manifest.
+- GitHub Actions enabled for the repository.
+- Argo CD installed if using the GitOps resources.
+- Bitnami Sealed Secrets installed if using the SealedSecret resource.
 
-## Configuration: GitHub Actions Secrets
+## 8. GitHub Actions Secrets
 
 Configure the following repository secrets:
 
-| Secret | Purpose |
+| Secret | Description |
 |---|---|
-| `QUAY_USERNAME` | Quay.io registry username |
-| `QUAY_TOKEN` | Quay.io authentication token |
+| `QUAY_USERNAME` | Quay.io username |
+| `QUAY_TOKEN` | Quay.io registry token |
 | `OPENSHIFT_SERVER` | OpenShift API endpoint |
-| `OPENSHIFT_TOKEN` | OpenShift service account or deployment token |
+| `OPENSHIFT_TOKEN` | Token used by the deployment workflow |
 
-Do not commit access tokens, passwords or other credentials to the repository.
 
-The OpenShift identity used by CI/CD should have only the permissions required to deploy and verify the application in its target namespace.
-
-## Local Installation and Testing
+## 9. Run the Project Locally
 
 Clone the repository:
 
@@ -396,7 +424,7 @@ Enter the project directory:
 cd openshift-platform-engineering
 ```
 
-Create a Python virtual environment:
+Create a virtual environment:
 
 ```bash
 python3 -m venv venv
@@ -414,90 +442,79 @@ Install dependencies:
 pip install -r requirements.txt
 ```
 
-Run tests:
+Run the tests:
 
 ```bash
 pytest tests/ -v
 ```
 
-Start the application:
+Start the Flask application:
 
 ```bash
 python app.py
 ```
 
-Open:
+Open the application at:
 
 ```text
 http://localhost:5000
 ```
 
-## OpenShift Deployment Verification
+## 10. OpenShift Deployment Verification
 
-After a successful deployment, inspect the application resources:
+After deployment, inspect the application resources:
 
 ```bash
-oc get pods -n ubiowororuki-dev
+oc get pods -n dev
 ```
 
 ```bash
-oc get deployments -n ubiowororuki-dev
+oc get deployments -n dev
 ```
 
 ```bash
-oc get services -n ubiowororuki-dev
+oc get services -n dev
 ```
 
-Check the deployment rollout:
+Check the rollout:
 
 ```bash
-oc rollout status deployment/mypython-app \
-  -n ubiowororuki-dev
+oc rollout status deployment/dev-mypython-app -n dev
 ```
 
 Inspect application logs:
 
 ```bash
-oc logs deployment/mypython-app \
-  -n ubiowororuki-dev
+oc logs deployment/dev-mypython-app -n dev
 ```
 
-Test the health endpoint through an appropriate OpenShift-accessible service or route.
+Use the `/health` endpoint through an appropriate OpenShift-accessible service or route to verify application health.
 
-## Security Considerations
+## 11. Security Practices
 
-This project demonstrates several security-related practices:
+The repository demonstrates several security-related concepts:
 
-- GitHub Actions encrypted secrets for external credentials.
+- GitHub Actions secrets for external credentials.
 - Trivy filesystem vulnerability scanning.
-- Trivy container image vulnerability scanning.
+- Trivy container image scanning.
 - Quay.io container image storage.
 - Sealed Secrets configuration for encrypted Kubernetes secret management.
-- OpenShift namespace-based workload deployment.
+- OpenShift namespace-based application deployment.
 
-For a stronger production implementation, consider:
+## What This Project Demonstrates
 
-- Pinning GitHub Actions to verified commit SHAs.
-- Using a verified OpenShift TLS certificate rather than disabling TLS verification.
-- Building and deploying immutable image tags or digests.
-- Enforcing least-privilege RBAC.
-- Adding persistent storage and backup policies for MySQL.
-- Running containers as non-root where compatible.
-- Adding image signing and provenance verification.
-- Adding resource requests, limits and readiness/liveness probes.
-- Validating all deployment manifests before applying them.
+This project brings together several important platform engineering concepts:
+- Building and testing a Python application.
+- Packaging applications with Docker.
+- Automating CI/CD using GitHub Actions.
+- Scanning application dependencies and container images with Trivy.
+- Publishing container images to Quay.io.
+- Deploying Kubernetes workloads to Red Hat OpenShift.
+- Reusing Kubernetes resources through Kustomize.
+- Separating development, staging and production configurations.
+- Defining GitOps applications with Argo CD.
+- Managing encrypted Kubernetes secrets using Sealed Secrets.
 
-## Troubleshooting
+**Repository:** https://github.com/smogalloyubio/openshift-platform-engineering
 
-| Problem | What to check |
-|---|---|
-| GitHub Actions test failure | Python dependencies and Pytest output. |
-| Quay authentication failure | `QUAY_USERNAME`, `QUAY_TOKEN` and registry permissions. |
-| Trivy scan failure | Vulnerability report and configured severity threshold. |
-| OpenShift login failure | API URL, token permissions and cluster connectivity. |
-| Kustomize build failure | Kustomize installation, file paths and manifest structure. |
-| Image pull failure | Image name, tag and registry pull permissions. |
-| Pod not starting | `oc describe pod` and container logs. |
-| Argo CD application out of sync | Repository URL, target revision, overlay path and sync policy. |
-| MySQL startup failure | Secret keys, database configuration and persistent storage requirements. |
-
+**Architecture diagram:** `Achitecturaldiagram/Openshiftcluster.jpg`
