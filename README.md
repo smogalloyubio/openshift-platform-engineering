@@ -501,12 +501,3 @@ For a stronger production implementation, consider:
 | Argo CD application out of sync | Repository URL, target revision, overlay path and sync policy. |
 | MySQL startup failure | Secret keys, database configuration and persistent storage requirements. |
 
-## Conclusion
-
-This project demonstrates a practical cloud-native delivery workflow built around OpenShift.
-
-It brings together application testing, containerization, vulnerability scanning, image publishing, declarative Kubernetes configuration and GitOps deployment concepts.
-
-The project provides a foundation for exploring how platform and DevOps engineers can standardize application delivery, reduce manual deployment operations and improve consistency across multiple environments.
-
-**Repository:** https://github.com/smogalloyubio/openshift-platform-engineering
